@@ -1,11 +1,29 @@
 kind: pipeline
-type: docker
-name: default
-
+name: built-cli
 steps:
-- name: greeting
-  image: alpine
-  commands:
-  - echo hello
-  - echo world
-
+  - name: check
+    image: herbysk/drone-plugin-check-changes
+    settings:
+      ignore: [ "/**", "!/.drone.yml", "!/*.json", "!/*.js", "!/sdk/", "!/lang/", "!/cli/", "/cli/dist/" ]
+      negative: .skip
+  - name: prepare
+    image: node:lts
+    commands:
+      - if [ -f .skip ]; then exit; fi
+      - npm install
+      - cd sdk
+      - npm install
+      - cd ..
+      - cd cli
+      - npm install ../lang
+      - npm install
+  - name: build
+    image: node:lts
+    commands:
+      - if [ -f .skip ]; then exit; fi
+      - npm run build:cli
+  - name: test
+    image: node:lts
+    commands:
+      - if [ -f .skip ]; then exit; fi
+      - npm run test:e2e

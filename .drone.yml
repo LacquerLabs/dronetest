@@ -14,6 +14,7 @@ steps:
       - go build
   - name: build
     image: docker
+    privileged: true
     commands:
       - if [ -f .skip ]; then exit; fi
       - docker build -t dronetest/goapp .

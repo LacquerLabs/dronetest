@@ -22,6 +22,7 @@ steps:
 #      - /var/run/docker.sock:/var/run/docker.sock
   - name: deploy
     image: docker/compose
+    privileged: true
     commands:
       - if [ -f .skip ]; then exit; fi
       - docker-compose up -d

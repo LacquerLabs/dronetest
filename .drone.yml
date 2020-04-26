@@ -24,8 +24,9 @@ steps:
     image: docker/compose
     privileged: true
     environment:
-      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_HOST: "unix:///var/run/docker.sock"
     commands:
+      - export DOCKER_HOST="unix:///var/run/docker.sock"
       - if [ -f .skip ]; then exit; fi
       - docker-compose up -d
     volume:

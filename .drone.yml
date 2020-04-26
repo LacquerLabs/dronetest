@@ -22,12 +22,14 @@ steps:
 #      - /var/run/docker.sock:/var/run/docker.sock
   - name: deploy
     image: docker/compose
-    privileged: true
-    environment:
-      DOCKER_HOST: "unix:///var/run/docker.sock"
     commands:
-      - export DOCKER_HOST="unix:///var/run/docker.sock"
       - if [ -f .skip ]; then exit; fi
       - docker-compose up -d
-    volume:
-      - /var/run/docker.sock:/var/run/docker.sock
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
+
+volumes:
+  - name: docker_socket
+    host:
+      path: /var/run/docker.sock

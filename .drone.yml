@@ -12,15 +12,16 @@ steps:
     commands:
       - if [ -f .skip ]; then exit; fi
       - go build
-#  - name: build
-#    image: docker
-#    privileged: true
-#    commands:
-#      - if [ -f .skip ]; then exit; fi
-#      - docker build -t dronetest/goapp .
-#    volume:
-#      - /var/run/docker.sock:/var/run/docker.sock
-  - name: deploy
+  - name: build-docker
+    image: docker
+    privileged: true
+    commands:
+      - if [ -f .skip ]; then exit; fi
+      - docker build -t dronetest/goapp .
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
+  - name: deploy-compose
     image: docker/compose
     commands:
       - if [ -f .skip ]; then exit; fi

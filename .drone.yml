@@ -25,6 +25,6 @@ steps:
     privileged: true
     commands:
       - if [ -f .skip ]; then exit; fi
-      - docker-compose up -d
+      - DOCKER_HOST="/var/run/docker.sock" docker-compose up -d
     volume:
       - /var/run/docker.sock:/var/run/docker.sock

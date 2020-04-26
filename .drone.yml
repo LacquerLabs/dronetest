@@ -2,10 +2,24 @@ kind: pipeline
 type: docker
 name: default
 
-steps:
-- name: greeting
-  image: alpine
-  commands:
-  - echo hello
-  - echo world
-
+pipeline:
+  compile:
+    image: golang
+    commands:
+      - go build
+  test:
+    image: golang
+    commands:
+      - go build
+  build:
+    image: docker
+    commands:
+      - docker build -t some/container .
+    volume:
+      - /var/run/docker.sock:/var/run/docker.sock
+  deploy:
+    image: docker/compose
+    commands:
+      - docker compose up -d
+    volume:
+      - /var/run/docker.sock:/var/run/docker.sock

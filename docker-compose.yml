@@ -1,0 +1,21 @@
+version: '3.2'
+services:
+  whoami:
+    image: containous/whoami
+    restart: unless-stopped
+    ports:
+     - 80
+    networks:
+      - network_proxy
+    labels:
+      - traefik.docker.network=network_proxy
+      - traefik.frontend.rule=Host:who.whamcat.com
+      - traefik.port=80
+      - traefik.frontend.redirect.entryPoint=https
+      - traefik.backend.healthcheck.path=/ip
+      - traefik.backend.healthcheck.interval=60s
+
+networks:
+  network_proxy:
+    external: true
+

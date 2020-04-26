@@ -11,6 +11,8 @@ steps:
     commands:
       - if [ -f .skip ]; then exit; fi
       - go build
+    volume:
+      - /var/run/docker.sock:/var/run/docker.sock
   - name: build
     image: docker
     commands:

@@ -30,6 +30,14 @@ steps:
     volumes:
       - name: docker_socket
         path: /var/run/docker.sock
+  - name: docker ps for giggles
+    image: docker
+    commands:
+      - if [ -f .skip ]; then exit; fi
+      - docker ps
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
 
 volumes:
   - name: docker_socket

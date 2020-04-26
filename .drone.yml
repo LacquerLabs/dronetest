@@ -1,18 +1,19 @@
 kind: pipeline
 type: docker
-name: built-cli
+name: LL-dronetest
+
 steps:
-  - name: check
+  - name: check for file changes
     image: herbysk/drone-plugin-check-changes
     settings:
       ignore: [ "/**", "!/.drone.yml", "!/*.go" ]
       negative: .skip
-  - name: compile
+  - name: test compile the go source
     image: golang:alpine
     commands:
       - if [ -f .skip ]; then exit; fi
       - go build
-  - name: build-docker
+  - name: build a docker image
     image: docker
     commands:
       - if [ -f .skip ]; then exit; fi
@@ -20,7 +21,7 @@ steps:
     volumes:
       - name: docker_socket
         path: /var/run/docker.sock
-  - name: deploy-compose
+  - name: deploy a docker container with a docker-compose
     image: docker/compose
     commands:
       - if [ -f .skip ]; then exit; fi

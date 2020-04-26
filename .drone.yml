@@ -23,8 +23,10 @@ steps:
   - name: deploy
     image: docker/compose
     privileged: true
+    environment:
+      - DOCKER_HOST="unix:///var/run/docker.sock"
     commands:
       - if [ -f .skip ]; then exit; fi
-      - DOCKER_HOST="unix:///var/run/docker.sock" docker-compose up -d
+      - docker-compose up -d
     volume:
       - /var/run/docker.sock:/var/run/docker.sock

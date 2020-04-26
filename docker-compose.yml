@@ -12,7 +12,7 @@ services:
       - traefik.frontend.rule=Host:who.whamcat.com
       - traefik.port=80
       - traefik.frontend.redirect.entryPoint=https
-      - traefik.backend.healthcheck.path=/ip
+      - traefik.backend.healthcheck.path=/
       - traefik.backend.healthcheck.interval=60s
 
 networks:

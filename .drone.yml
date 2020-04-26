@@ -4,26 +4,24 @@ steps:
   - name: check
     image: herbysk/drone-plugin-check-changes
     settings:
-      ignore: [ "/**", "!/.drone.yml", "!/*.json", "!/*.js", "!/sdk/", "!/lang/", "!/cli/", "/cli/dist/" ]
+      ignore: [ "/**", "!/.drone.yml", "!/*.go" ]
       negative: .skip
-  - name: prepare
-    image: node:lts
+  - name: compile
+    image: golang:alpine
     commands:
       - if [ -f .skip ]; then exit; fi
-      - npm install
-      - cd sdk
-      - npm install
-      - cd ..
-      - cd cli
-      - npm install ../lang
-      - npm install
+      - go build
   - name: build
-    image: node:lts
+    image: docker
     commands:
       - if [ -f .skip ]; then exit; fi
-      - npm run build:cli
-  - name: test
-    image: node:lts
+      - docker build -t dronetest/goapp .
+    volume:
+      - /var/run/docker.sock:/var/run/docker.sock
+  - name: deploy
+    image: docker/compose
     commands:
       - if [ -f .skip ]; then exit; fi
-      - npm run test:e2e
+      - docker compose up -d
+    volume:
+      - /var/run/docker.sock:/var/run/docker.sock

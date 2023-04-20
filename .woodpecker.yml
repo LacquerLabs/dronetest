@@ -2,7 +2,5 @@ pipeline:
   build:
     image: golang:alpine
     commands:
-      - go get
       - go build
-      - go test
 
